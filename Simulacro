@@ -1,0 +1,135 @@
+import json
+# CARGAR DATOS
+
+try:
+    with open("clientes.json", "r") as archivo:
+        clientes = json.load(archivo)
+except:
+    clientes = []
+
+
+# GUARDAR DATOS
+
+def guardar_datos():
+    with open("clientes.json", "w") as archivo:
+        json.dump(clientes, archivo, indent=4)
+
+
+# CREAR CLIENTE
+
+def crear_cliente():
+    try:
+        id_cliente = int(input("ID: "))
+        
+        # Verificar ID único
+        for c in clientes:
+            if c["id"] == id_cliente:
+                print("❌ Ese ID ya existe")
+                return
+        
+        nombre = input("Nombre: ")
+        edad = int(input("Edad: "))
+        plan = input("Plan (mensual/trimestral/anual): ")
+        estado = input("Estado (activo/inactivo): ")
+
+        nuevo = {
+            "id": id_cliente,
+            "nombre": nombre,
+            "edad": edad,
+            "plan": plan,
+            "estado": estado
+        }
+
+        clientes.append(nuevo)
+        guardar_datos()
+        print("✅ Cliente creado")
+
+    except:
+        print("❌ Error en los datos")
+
+
+# LISTAR CLIENTES
+
+def listar_clientes():
+    if not clientes:
+        print("No hay clientes")
+        return
+
+    for c in clientes:
+        print(f'ID: {c["id"]} | Nombre: {c["nombre"]} | Edad: {c["edad"]} | Plan: {c["plan"]} | Estado: {c["estado"]}')
+
+
+# BUSCAR CLIENTE
+
+def buscar_cliente():
+    dato = input("Ingrese ID o nombre: ")
+
+    for c in clientes:
+        if str(c["id"]) == dato or c["nombre"].lower() == dato.lower():
+            print(c)
+            return
+    
+    print("❌ Cliente no encontrado")
+
+
+# ACTUALIZAR CLIENTE
+
+def actualizar_cliente():
+    id_cliente = input("ID del cliente a actualizar: ")
+
+    for c in clientes:
+        if str(c["id"]) == id_cliente:
+            c["nombre"] = input("Nuevo nombre: ")
+            c["edad"] = int(input("Nueva edad: "))
+            c["plan"] = input("Nuevo plan: ")
+            c["estado"] = input("Nuevo estado: ")
+
+            guardar_datos()
+            print("✅ Cliente actualizado")
+            return
+
+    print("❌ Cliente no encontrado")
+
+
+# ELIMINAR CLIENTE
+
+def eliminar_cliente():
+    id_cliente = input("ID del cliente a eliminar: ")
+
+    for c in clientes:
+        if str(c["id"]) == id_cliente:
+            clientes.remove(c)
+            guardar_datos()
+            print("✅ Cliente eliminado")
+            return
+
+    print("❌ Cliente no encontrado")
+
+# MENÚ
+
+while True:
+    print("\n--- MENÚ ---")
+    print("1. Crear cliente")
+    print("2. Listar clientes")
+    print("3. Buscar cliente")
+    print("4. Actualizar cliente")
+    print("5. Eliminar cliente")
+    print("6. Salir")
+
+    opcion = input("Elige una opción: ")
+
+    if opcion == "1":
+        crear_cliente()
+    elif opcion == "2":
+        listar_clientes()
+    elif opcion == "3":
+        buscar_cliente()
+    elif opcion == "4":
+        actualizar_cliente()
+    elif opcion == "5":
+        eliminar_cliente()
+    elif opcion == "6":
+        print("Saliendo...")
+        break
+    else:
+        print("❌ Opción inválida")
